@@ -3,17 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Knight Bot - WhatsApp Linker</title>
+  <title>Infinity MD - System Link</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #000000;
-      --secondary-color: #ffffff;
-      --accent-color: #f0f0f0;
-      --text-color: #000000;
-      --background-color: #ffffff;
-      --hover-color: #f5f5f5;
-      --border-color: rgba(0, 0, 0, 0.1);
+      --bg-base: #050505;
+      --panel-bg: rgba(10, 12, 16, 0.85);
+      --neon-cyan: #00f3ff;
+      --neon-purple: #bc13fe;
+      --neon-cyan-dim: rgba(0, 243, 255, 0.2);
+      --neon-purple-dim: rgba(188, 19, 254, 0.2);
+      --text-main: #e0e6ed;
+      --text-muted: #8a95a5;
+      --border-color: rgba(0, 243, 255, 0.3);
+      --error-color: #ff2a2a;
+      --success-color: #00ff66;
     }
 
     * {
@@ -23,24 +28,64 @@
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--background-color);
-      color: var(--text-color);
+      font-family: 'Rajdhani', sans-serif;
+      background-color: var(--bg-base);
+      /* Cyber Grid Background */
+      background-image: 
+        linear-gradient(var(--neon-cyan-dim) 1px, transparent 1px),
+        linear-gradient(90deg, var(--neon-cyan-dim) 1px, transparent 1px);
+      background-size: 40px 40px;
+      background-position: center center;
+      color: var(--text-main);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 15px;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animated background glow */
+    body::before {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, var(--neon-purple-dim) 0%, transparent 60%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      animation: pulse 6s infinite alternate;
     }
 
     .container {
+      position: relative;
+      z-index: 1;
       width: 100%;
-      max-width: 450px;
-      background: var(--background-color);
-      border-radius: 16px;
-      padding: 25px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      max-width: 460px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 12px;
+      padding: 30px;
       border: 1px solid var(--border-color);
+      box-shadow: 
+        0 0 20px rgba(0, 243, 255, 0.1),
+        inset 0 0 20px rgba(0, 243, 255, 0.05);
+    }
+
+    /* Glitch effect on top border */
+    .container::after {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 10%;
+      width: 80%;
+      height: 2px;
+      background: var(--neon-cyan);
+      box-shadow: 0 0 10px var(--neon-cyan);
     }
 
     .header {
@@ -49,120 +94,123 @@
     }
 
     .logo {
-      width: 70px;
-      height: 70px;
+      width: 80px;
+      height: 80px;
       margin: 0 auto 16px;
-      background: var(--primary-color);
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid var(--neon-cyan);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
-      color: white;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+      font-size: 34px;
+      color: var(--neon-cyan);
+      box-shadow: 0 0 15px var(--neon-cyan-dim), inset 0 0 15px var(--neon-cyan-dim);
+      animation: float 3s ease-in-out infinite;
     }
 
     .title {
-      font-size: 24px;
+      font-size: 32px;
       font-weight: 700;
-      margin-bottom: 8px;
-      color: var(--primary-color);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #fff;
+      text-shadow: 0 0 8px var(--neon-cyan);
     }
 
     .subtitle {
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.7);
-      margin-bottom: 20px;
+      font-size: 16px;
+      color: var(--neon-cyan);
+      font-family: 'Share Tech Mono', monospace;
+      margin-bottom: 24px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
     .social-icons {
       display: flex;
       justify-content: center;
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 15px;
+      margin-bottom: 25px;
     }
 
     .social-icons a {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--text-muted);
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fff;
+      color: var(--text-main);
       font-size: 18px;
       text-decoration: none;
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    .social-icons a.youtube { background: #FF0000; }
-    .social-icons a.telegram { background: #0088cc; }
-    .social-icons a.whatsapp { background: #0cfa10; }
-    .social-icons a.github { background: #333; }
+    .social-icons a::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--neon-cyan);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
 
     .social-icons a:hover {
-      transform: scale(1.1);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      border-color: var(--neon-cyan);
+      color: #000;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px var(--neon-cyan-dim);
+    }
+    
+    .social-icons a:hover::before {
+      opacity: 1;
     }
 
     /* Toggle Switch Styles */
     .toggle-container {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-      background: var(--hover-color);
-      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 8px;
       padding: 4px;
       border: 1px solid var(--border-color);
+      margin-bottom: 25px;
     }
 
     .toggle-option {
       flex: 1;
-      padding: 10px 16px;
+      padding: 12px 16px;
       text-align: center;
       cursor: pointer;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 1px;
       transition: all 0.3s ease;
-      position: relative;
+      color: var(--text-muted);
+      text-transform: uppercase;
     }
 
     .toggle-option.active {
-      background: var(--primary-color);
-      color: var(--secondary-color);
-    }
-
-    .toggle-option:not(.active) {
-      color: var(--text-color);
+      background: rgba(0, 243, 255, 0.15);
+      color: var(--neon-cyan);
+      box-shadow: inset 0 0 10px var(--neon-cyan-dim);
+      border: 1px solid var(--neon-cyan-dim);
     }
 
     .toggle-option:hover:not(.active) {
-      background: var(--background-color);
-    }
-    .copy-btn {
-      width: 100%;
-      padding: 12px;
-      background: var(--hover-color);
-      border: 1.5px solid var(--border-color);
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .copy-btn:hover {
-      background: var(--background-color);
-      border-color: var(--primary-color);
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
     }
 
     .input-group {
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       transition: all 0.3s ease;
     }
 
@@ -172,150 +220,217 @@
 
     .input-label {
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       font-weight: 500;
-      font-size: 13px;
+      font-size: 14px;
+      color: var(--text-muted);
+      font-family: 'Share Tech Mono', monospace;
+      text-transform: uppercase;
     }
 
     .input-field {
       width: 100%;
-      padding: 12px;
-      border: 1.5px solid var(--border-color);
-      border-radius: 12px;
-      background: var(--background-color);
-      color: var(--text-color);
-      font-size: 15px;
+      padding: 14px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.6);
+      color: var(--neon-cyan);
+      font-size: 18px;
+      font-family: 'Share Tech Mono', monospace;
+      transition: all 0.3s ease;
+    }
+
+    .input-field::placeholder {
+      color: rgba(0, 243, 255, 0.3);
     }
 
     .input-field:focus {
       outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 15px var(--neon-cyan-dim), inset 0 0 10px var(--neon-cyan-dim);
     }
 
-    .generate-btn {
+    .btn-cyber {
       width: 100%;
-      padding: 12px;
-      background: var(--primary-color);
-      border: none;
-      border-radius: 12px;
-      color: var(--secondary-color);
-      font-size: 15px;
-      font-weight: 600;
+      padding: 14px;
+      background: transparent;
+      border: 1px solid var(--neon-cyan);
+      border-radius: 8px;
+      color: var(--neon-cyan);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
       cursor: pointer;
       transition: all 0.3s ease;
-      margin-bottom: 16px;
-    }
-
-    .generate-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .generate-btn.hidden {
-      display: none;
-    }
-
-    .code-display {
-      background: var(--hover-color);
-      padding: 12px;
-      border-radius: 12px;
-      text-align: center;
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 16px;
-      min-height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1.5px solid var(--border-color);
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .btn-cyber::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.4), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-cyber:hover {
+      background: rgba(0, 243, 255, 0.1);
+      box-shadow: 0 0 20px var(--neon-cyan-dim);
+      text-shadow: 0 0 5px var(--neon-cyan);
+    }
+
+    .btn-cyber:hover::before {
+      left: 100%;
+    }
+
+    .btn-cyber.hidden {
+      display: none;
+    }
+
+    .copy-btn {
+      border-color: var(--neon-purple);
+      color: var(--neon-purple);
+    }
+
+    .copy-btn::before {
+      background: linear-gradient(90deg, transparent, rgba(188, 19, 254, 0.4), transparent);
+    }
+
+    .copy-btn:hover {
+      background: rgba(188, 19, 254, 0.1);
+      box-shadow: 0 0 20px var(--neon-purple-dim);
+      text-shadow: 0 0 5px var(--neon-purple);
+    }
+
+    .display-box {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 20px;
+      font-family: 'Share Tech Mono', monospace;
+      margin-bottom: 20px;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-color);
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+      position: relative;
+      color: var(--text-muted);
     }
 
     .qr-display {
-      background: var(--hover-color);
+      background: rgba(0, 0, 0, 0.8);
       padding: 30px;
-      border-radius: 12px;
+      border-radius: 8px;
       text-align: center;
-      margin-bottom: 16px;
-      border: 1.5px solid var(--border-color);
+      margin-bottom: 20px;
+      border: 1px solid var(--border-color);
       display: none;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
     }
 
     .qr-image {
-      max-width: 280px;
-      max-height: 280px;
+      max-width: 260px;
+      max-height: 260px;
       margin: 0 auto 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      padding: 10px;
+      background: #fff;
+      box-shadow: 0 0 20px var(--neon-cyan-dim);
     }
 
     .qr-instructions {
-      font-size: 13px;
-      color: rgba(0, 0, 0, 0.7);
-      line-height: 1.5;
+      font-size: 14px;
+      color: var(--neon-cyan);
+      font-family: 'Share Tech Mono', monospace;
+      line-height: 1.6;
     }
 
     .success-message {
-      color: #000aff;
+      color: var(--success-color);
+      text-shadow: 0 0 8px rgba(0, 255, 102, 0.5);
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-size: 16px;
+      gap: 10px;
     }
 
     .error-message {
-      color: #e74c3c;
+      color: var(--error-color);
+      text-shadow: 0 0 8px rgba(255, 42, 42, 0.5);
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: 8px;
-      font-size: 14px;
+      font-size: 16px;
     }
 
     .loading {
       display: none;
       text-align: center;
-      margin: 16px 0;
+      margin: 20px 0;
     }
 
     .loading i {
-      font-size: 24px;
-      color: var(--primary-color);
-      animation: spin 1s linear infinite;
+      font-size: 30px;
+      color: var(--neon-cyan);
+      animation: spin 1s linear infinite, neonPulse 1.5s ease-in-out infinite alternate;
     }
 
+    .footer {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 1px;
+    }
+
+    .footer span {
+      color: var(--neon-cyan);
+    }
+
+    /* Animations */
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
 
-    .footer {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 12px;
-      color: rgba(0, 0, 0, 0.5);
+    @keyframes pulse {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+      100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+    }
+
+    @keyframes neonPulse {
+      0% { text-shadow: 0 0 5px var(--neon-cyan); }
+      100% { text-shadow: 0 0 20px var(--neon-cyan), 0 0 30px var(--neon-cyan); }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); box-shadow: 0 0 15px var(--neon-cyan-dim), inset 0 0 15px var(--neon-cyan-dim); }
+      50% { transform: translateY(-8px); box-shadow: 0 10px 20px rgba(0, 243, 255, 0.3), inset 0 0 20px rgba(0, 243, 255, 0.2); }
+      100% { transform: translateY(0px); box-shadow: 0 0 15px var(--neon-cyan-dim), inset 0 0 15px var(--neon-cyan-dim); }
     }
 
     @media (max-width: 480px) {
       .container {
         padding: 20px;
-        border-radius: 12px;
-        max-width: 400px;
       }
-
-      .code-display {
-        font-size: 16px;
-        min-height: 50px;
+      .title {
+        font-size: 26px;
       }
-
       .qr-image {
-        max-width: 240px;
-        max-height: 240px;
-      }
-
-      .qr-display {
-        padding: 20px;
+        max-width: 220px;
+        max-height: 220px;
       }
     }
   </style>
@@ -323,57 +438,57 @@
 <body>
   <div class="container">
     <div class="header">
-      <div class="logo"><i class="fas fa-robot"></i></div>
-      <h1 class="title">Knight Bot</h1>
-      <p class="subtitle">Link your WhatsApp device</p>
+      <div class="logo"><i class="fa-solid fa-infinity"></i></div>
+      <h1 class="title">Infinity MD</h1>
+      <p class="subtitle">System Link Established</p>
       <div class="social-icons">
-        <a href="https://www.youtube.com/@mr_unique_hacker?sub_confirmation=1" target="_blank" class="youtube"><i class="fab fa-youtube"></i></a>
-        <a href="https://t.me/+hxojkc7kaVViYzdl" target="_blank" class="telegram"><i class="fab fa-telegram-plane"></i></a>
-        <a href="https://whatsapp.com/channel/0029Va90zAnIHphOuO8Msp3A" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
-        <a href="https://github.com/mruniquehacker/Knightbot-md" target="_blank" class="github"><i class="fab fa-github"></i></a>
+        <a href="https://www.youtube.com/@mr_unique_hacker?sub_confirmation=1" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="https://t.me/+hxojkc7kaVViYzdl" target="_blank" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
+        <a href="https://whatsapp.com/channel/0029Va90zAnIHphOuO8Msp3A" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://github.com/mruniquehacker/Knightbot-md" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
       </div>
     </div>
 
     <!-- Toggle Switch -->
     <div class="toggle-container">
       <div class="toggle-option active" data-mode="pair">
-        <i class="fas fa-key"></i> Pair Code
+        <i class="fas fa-terminal"></i> Pair Code
       </div>
       <div class="toggle-option" data-mode="qr">
-        <i class="fas fa-qrcode"></i> QR Code
+        <i class="fas fa-qrcode"></i> QR Matrix
       </div>
     </div>
 
     <div class="input-group" id="inputGroup">
-      <label class="input-label">Enter your WhatsApp number with country code</label>
-      <input type="text" id="mobileNumber" class="input-field" placeholder="+917023951514" pattern="[+][0-9]{10,}" title="Please enter country code starting with + followed by number">
+      <label class="input-label">> Enter Target Identification [Number]</label>
+      <input type="text" id="mobileNumber" class="input-field" placeholder="+91 00000 00000" pattern="[+][0-9]{10,}" title="Please enter country code starting with + followed by number">
     </div>
 
-    <button class="generate-btn" id="submit">
-      <i class="fas fa-key"></i> Generate Pair Code
+    <button class="btn-cyber" id="submit">
+      <i class="fas fa-bolt"></i> Initialize Pairing
     </button>
 
     <div class="loading" id="loading">
-      <i class="fas fa-spinner"></i>
+      <i class="fas fa-circle-notch"></i>
     </div>
 
-    <div class="code-display" id="codeDisplay">
-      Your pair code will appear here
+    <div class="display-box" id="codeDisplay">
+      [ Awaiting Command ]
     </div>
 
     <div class="qr-display" id="qrDisplay">
-      <img id="qrImage" class="qr-image" src="" alt="QR Code">
+      <img id="qrImage" class="qr-image" src="" alt="QR Data Matrix">
       <div class="qr-instructions" id="qrInstructions">
-        Scan this QR code with your WhatsApp app
+        > Scan visual matrix via WhatsApp device Linker.
       </div>
     </div>
 
-    <button class="copy-btn" id="copy" onclick="copyCode()">
-      <i class="fas fa-copy"></i> Copy Code
+    <button class="btn-cyber copy-btn" id="copy" onclick="copyCode()">
+      <i class="fas fa-copy"></i> Extract Code
     </button>
 
     <div class="footer">
-      <p>© 2025 Mr Unique Hacker | Knight Bot</p>
+      <p>SYSTEM CORE v2.0 // © 2025 <span>Infinity MD</span></p>
     </div>
   </div>
 
@@ -397,20 +512,23 @@
         // Update button and input visibility
         const submitBtn = document.getElementById('submit');
         const inputGroup = document.getElementById('inputGroup');
+        const copyBtn = document.getElementById('copy');
         
         if (mode === 'pair') {
-          submitBtn.innerHTML = '<i class="fas fa-key"></i> Generate Pair Code';
+          submitBtn.innerHTML = '<i class="fas fa-bolt"></i> Initialize Pairing';
           submitBtn.classList.remove('hidden');
           inputGroup.classList.remove('hidden');
+          copyBtn.style.display = 'flex';
         } else {
           submitBtn.classList.add('hidden');
           inputGroup.classList.add('hidden');
+          copyBtn.style.display = 'none';
           // Auto-generate QR code when QR mode is selected
           generateQRCode();
         }
 
         // Clear displays
-        document.getElementById('codeDisplay').innerHTML = 'Your pair code will appear here';
+        document.getElementById('codeDisplay').innerHTML = '[ Awaiting Command ]';
         document.getElementById('qrDisplay').style.display = 'none';
         document.getElementById('codeDisplay').style.display = 'flex';
       });
@@ -426,20 +544,21 @@
       qrDisplay.style.display = 'none';
 
       try {
+        // API Endpoint for QR 
         const response = await axios('/qr');
         
         if (response.data.qr) {
           document.getElementById('qrImage').src = response.data.qr;
-          document.getElementById('qrInstructions').innerHTML = response.data.instructions.join('<br>');
+          document.getElementById('qrInstructions').innerHTML = '> ' + response.data.instructions.join('<br>> ');
           qrDisplay.style.display = 'block';
           codeDisplay.style.display = 'none';
         } else {
-          codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Failed to generate QR code</div>';
+          codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-triangle"></i> ERROR: Matrix generation failed</div>';
           codeDisplay.style.display = 'flex';
         }
       } catch (error) {
         console.error("Error generating QR code:", error);
-        codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Error generating QR code. Please try again.</div>';
+        codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-triangle"></i> CONNECTION FAILED: Server unresponsive</div>';
         codeDisplay.style.display = 'flex';
       } finally {
         loadingSpinner.style.display = "none";
@@ -456,7 +575,7 @@
 
       const mobileNumber = mobileNumberInput.value.trim();
       if (!mobileNumber) {
-        codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Please enter your WhatsApp number</div>';
+        codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-triangle"></i> INPUT REQUIRED: Target Identification blank</div>';
         return;
       }
 
@@ -465,36 +584,63 @@
       qrDisplay.style.display = 'none';
 
       try {
+        // API Endpoint for Pair Code
         const response = await axios(`/pair?number=${mobileNumber.replace(/[^0-9]/g, "")}`);
         
         const code = response.data.code || "Service Unavailable";
         if (code === "Service Unavailable") {
-          codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Service Unavailable</div>';
+          codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-triangle"></i> API OFFLINE</div>';
         } else {
-          codeDisplay.innerHTML = `<div class="success-message"><i class="fas fa-check-circle"></i> CODE: ${code}</div>`;
+          codeDisplay.innerHTML = `<div class="success-message"><i class="fas fa-check-circle" style="font-size:24px;"></i> <span>DECRYPTED KEY:</span> <span style="font-size: 28px; letter-spacing: 4px; color: #fff;">${code}</span></div>`;
         }
         codeDisplay.style.display = 'flex';
       } catch (error) {
         console.error("Error generating code:", error);
-        codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Error generating code. Please try again.</div>';
+        codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-triangle"></i> CONNECTION FAILED: Try again</div>';
         codeDisplay.style.display = 'flex';
       } finally {
         loadingSpinner.style.display = "none";
       }
     });
+
     function copyCode() {
-      const codeDisplay = document.getElementById("codeDisplay").innerText;
-      const code = codeDisplay.replace('CODE: ', '');
-      navigator.clipboard.writeText(code).then(() => {
-        const copyBtn = document.getElementById("copy");
-        const originalText = copyBtn.innerHTML;
-        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-        setTimeout(() => {
-          copyBtn.innerHTML = originalText;
-        }, 2000);
-      }).catch(err => {
-        console.error("Failed to copy text: ", err);
-      });
+      const codeDisplay = document.getElementById("codeDisplay");
+      // Find the deeply nested span that holds the actual code if it exists, otherwise get raw text
+      const codeElement = codeDisplay.querySelector('span:nth-child(3)');
+      const codeText = codeElement ? codeElement.innerText.trim() : codeDisplay.innerText.replace('DECRYPTED KEY:', '').replace('[ Awaiting Command ]', '').trim();
+      
+      if(!codeText) return;
+
+      // Safely copy to clipboard using execCommand to bypass iFrame restrictions
+      const textArea = document.createElement("textarea");
+      textArea.value = codeText;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          const copyBtn = document.getElementById("copy");
+          const originalText = copyBtn.innerHTML;
+          copyBtn.innerHTML = '<i class="fas fa-check-double"></i> DATA EXTRACTED';
+          copyBtn.style.borderColor = "var(--success-color)";
+          copyBtn.style.color = "var(--success-color)";
+          
+          setTimeout(() => {
+            copyBtn.innerHTML = originalText;
+            copyBtn.style.borderColor = "var(--neon-purple)";
+            copyBtn.style.color = "var(--neon-purple)";
+          }, 2000);
+        }
+      } catch (err) {
+        console.error("Extraction failed: ", err);
+      }
+
+      document.body.removeChild(textArea);
     }
   </script>
 </body>
