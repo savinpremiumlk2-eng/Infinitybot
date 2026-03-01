@@ -6,7 +6,6 @@ import path from 'path';
 // Importing the modules
 import pairRouter from './pair.js';
 import qrRouter from './qr.js';
-import QRCode from 'qrcode';
 
 const app = express();
 
@@ -14,8 +13,10 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Port configuration
 const PORT = process.env.PORT || 8000;
 
+// Increase event listener limit to prevent memory leak warnings during multiple socket connections
 import('events').then(events => {
     events.EventEmitter.defaultMaxListeners = 500;
 });
@@ -23,18 +24,30 @@ import('events').then(events => {
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Serve static files (HTML, CSS, JS) from the root directory
 app.use(express.static(__dirname));
 
-// Routes
+// Primary Route: Serves the main UI
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'pair.html'));
 });
 
+// Router mounting
 app.use('/pair', pairRouter);
 app.use('/qr', qrRouter);
 
+// Start Server
 app.listen(PORT, () => {
-    console.log(`YoutTube: @mr_unique_hacker\n\nGitHub: @mruniquehacker\n\nServer running on http://localhost:${PORT}`);
+    console.log(`
+♾️ Infinity MD Session Generator
+--------------------------------
+🚀 Status: Running
+🌐 URL: http://localhost:${PORT}
+📁 Routes: /pair, /qr
+--------------------------------
+© 2025 Infinity MD Team
+    `);
 });
 
 export default app;
