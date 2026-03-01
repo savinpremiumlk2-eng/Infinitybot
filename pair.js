@@ -6,7 +6,7 @@ import pn from 'awesome-phonenumber';
 
 const router = express.Router();
 
-// Ensure the session directory exists
+// Helper function to clean up session directories
 function removeFile(FilePath) {
     try {
         if (!fs.existsSync(FilePath)) return false;
@@ -18,9 +18,9 @@ function removeFile(FilePath) {
 
 router.get('/', async (req, res) => {
     let num = req.query.number;
-    let dirs = './' + (num || `session`);
+    let dirs = './' + (num || `infinity_session`);
 
-    // Remove existing session if present
+    // Remove existing session if present to ensure a fresh start
     await removeFile(dirs);
 
     // Clean the phone number - remove any non-digit characters
@@ -30,10 +30,13 @@ router.get('/', async (req, res) => {
     const phone = pn('+' + num);
     if (!phone.isValid()) {
         if (!res.headersSent) {
-            return res.status(400).send({ code: 'Invalid phone number. Please enter your full international number (e.g., 15551234567 for US, 447911123456 for UK, 84987654321 for Vietnam, etc.) without + or spaces.' });
+            return res.status(400).send({ 
+                code: 'Invalid phone number. Please enter your full international number without + or spaces.' 
+            });
         }
         return;
     }
+    
     // Use the international number format (E.164, without '+')
     num = phone.getNumber('e164').replace('+', '');
 
@@ -41,8 +44,10 @@ router.get('/', async (req, res) => {
         const { state, saveCreds } = await useMultiFileAuthState(dirs);
 
         try {
-            const { version, isLatest } = await fetchLatestBaileysVersion();
-            let KnightBot = makeWASocket({
+            const { version } = await fetchLatestBaileysVersion();
+            
+            // Rebranded instance: Infinity_MD
+            let Infinity_MD = makeWASocket({
                 version,
                 auth: {
                     creds: state.creds,
@@ -60,102 +65,91 @@ router.get('/', async (req, res) => {
                 maxRetries: 5,
             });
 
-            KnightBot.ev.on('connection.update', async (update) => {
+            Infinity_MD.ev.on('connection.update', async (update) => {
                 const { connection, lastDisconnect, isNewLogin, isOnline } = update;
 
                 if (connection === 'open') {
-                    console.log("✅ Connected successfully!");
+                    console.log("✅ Infinity MD Connected Successfully!");
                     console.log("📱 Sending session file to user...");
                     
                     try {
-                        const sessionKnight = fs.readFileSync(dirs + '/creds.json');
-
-                        // Send session file to user
+                        const sessionFile = fs.readFileSync(dirs + '/creds.json');
                         const userJid = jidNormalizedUser(num + '@s.whatsapp.net');
-                        await KnightBot.sendMessage(userJid, {
-                            document: sessionKnight,
+
+                        // 1. Send session credentials file
+                        await Infinity_MD.sendMessage(userJid, {
+                            document: sessionFile,
                             mimetype: 'application/json',
                             fileName: 'creds.json'
                         });
                         console.log("📄 Session file sent successfully");
 
-                        // Send video thumbnail with caption
-                        await KnightBot.sendMessage(userJid, {
-                            image: { url: 'https://img.youtube.com/vi/-oz_u1iMgf8/maxresdefault.jpg' },
-                            caption: `🎬 *KnightBot MD V2.0 Full Setup Guide!*\n\n🚀 Bug Fixes + New Commands + Fast AI Chat\n📺 Watch Now: https://youtu.be/NjOipI2AoMk`
+                        // 2. Send rebranded signature/warning message
+                        await Infinity_MD.sendMessage(userJid, {
+                            text: `⚠️ *IMPORTANT: DO NOT SHARE THIS FILE* ⚠️\n\n` +
+                                  `┌┤♾️ *Infinity MD Session Authorized*\n` +
+                                  `│└────────────┈ ⳹\n` +
+                                  `│ *Status:* Active\n` +
+                                  `│ *User:* ${num}\n` +
+                                  `│ ©2025 Infinity MD Team\n` +
+                                  `└─────────────────┈ ⳹\n\n` +
+                                  `Deploy your bot now using the creds.json attached above.`
                         });
-                        console.log("🎬 Video guide sent successfully");
+                        console.log("⚠️ Rebranded signature sent");
 
-                        // Send warning message
-                        await KnightBot.sendMessage(userJid, {
-                            text: `⚠️Do not share this file with anybody⚠️\n 
-┌┤✑  Thanks for using Knight Bot
-│└────────────┈ ⳹        
-│©2025 Mr Unique Hacker 
-└─────────────────┈ ⳹\n\n`
-                        });
-                        console.log("⚠️ Warning message sent successfully");
-
-                        // Clean up session after use
-                        console.log("🧹 Cleaning up session...");
-                        await delay(1000);
+                        // Clean up session locally after successful delivery
+                        console.log("🧹 Cleaning up local session cache...");
+                        await delay(2000);
                         removeFile(dirs);
-                        console.log("✅ Session cleaned up successfully");
-                        console.log("🎉 Process completed successfully!");
-                        // Do not exit the process, just finish gracefully
+                        console.log("✅ Cleanup complete. Process finished!");
+                        
                     } catch (error) {
-                        console.error("❌ Error sending messages:", error);
-                        // Still clean up session even if sending fails
+                        console.error("❌ Error during message delivery:", error);
                         removeFile(dirs);
-                        // Do not exit the process, just finish gracefully
                     }
                 }
 
-                if (isNewLogin) {
-                    console.log("🔐 New login via pair code");
-                }
-
-                if (isOnline) {
-                    console.log("📶 Client is online");
-                }
+                if (isNewLogin) console.log("🔐 Infinity MD: New login detected.");
+                if (isOnline) console.log("📶 Infinity MD is online.");
 
                 if (connection === 'close') {
                     const statusCode = lastDisconnect?.error?.output?.statusCode;
-
                     if (statusCode === 401) {
-                        console.log("❌ Logged out from WhatsApp. Need to generate new pair code.");
+                        console.log("❌ Unauthorized: Session logged out.");
                     } else {
-                        console.log("🔁 Connection closed — restarting...");
+                        console.log("🔁 Connection dropped. Restarting Infinity MD...");
                         initiateSession();
                     }
                 }
             });
 
-            if (!KnightBot.authState.creds.registered) {
-                await delay(3000); // Wait 3 seconds before requesting pairing code
+            // Handle Pairing Code request
+            if (!Infinity_MD.authState.creds.registered) {
+                await delay(3000); 
                 num = num.replace(/[^\d+]/g, '');
                 if (num.startsWith('+')) num = num.substring(1);
 
                 try {
-                    let code = await KnightBot.requestPairingCode(num);
+                    let code = await Infinity_MD.requestPairingCode(num);
                     code = code?.match(/.{1,4}/g)?.join('-') || code;
                     if (!res.headersSent) {
-                        console.log({ num, code });
+                        console.log(`🔢 Code generated for ${num}: ${code}`);
                         await res.send({ code });
                     }
                 } catch (error) {
                     console.error('Error requesting pairing code:', error);
                     if (!res.headersSent) {
-                        res.status(503).send({ code: 'Failed to get pairing code. Please check your phone number and try again.' });
+                        res.status(503).send({ code: 'Infinity MD: Failed to fetch pairing code.' });
                     }
                 }
             }
 
-            KnightBot.ev.on('creds.update', saveCreds);
+            Infinity_MD.ev.on('creds.update', saveCreds);
+
         } catch (err) {
-            console.error('Error initializing session:', err);
+            console.error('Error initializing Infinity MD session:', err);
             if (!res.headersSent) {
-                res.status(503).send({ code: 'Service Unavailable' });
+                res.status(503).send({ code: 'Infinity MD: Service Unavailable' });
             }
         }
     }
@@ -163,21 +157,17 @@ router.get('/', async (req, res) => {
     await initiateSession();
 });
 
-// Global uncaught exception handler
+// Global exception handling to keep the server running
 process.on('uncaughtException', (err) => {
     let e = String(err);
-    if (e.includes("conflict")) return;
-    if (e.includes("not-authorized")) return;
-    if (e.includes("Socket connection timeout")) return;
-    if (e.includes("rate-overlimit")) return;
-    if (e.includes("Connection Closed")) return;
-    if (e.includes("Timed Out")) return;
-    if (e.includes("Value not found")) return;
-    if (e.includes("Stream Errored")) return;
-    if (e.includes("Stream Errored (restart required)")) return;
-    if (e.includes("statusCode: 515")) return;
-    if (e.includes("statusCode: 503")) return;
-    console.log('Caught exception: ', err);
+    const ignoreLogs = [
+        "conflict", "not-authorized", "Socket connection timeout", 
+        "rate-overlimit", "Connection Closed", "Timed Out", 
+        "Value not found", "Stream Errored", "statusCode: 515", "statusCode: 503"
+    ];
+    
+    if (ignoreLogs.some(msg => e.includes(msg))) return;
+    console.log('Infinity MD Caught Exception: ', err);
 });
 
 export default router;
